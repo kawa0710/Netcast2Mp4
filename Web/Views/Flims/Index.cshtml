@@ -1,0 +1,88 @@
+﻿@model IEnumerable<Web.ViewModels.FlimViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>影片列表</h1>
+<div class="row justify-content-md-center" id="elFlimIndex">
+    <div class="col-md-12">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">
+                        @Html.DisplayNameFor(model => model.FlmFileName)
+                    </th>
+                    <th scope="col">
+                        @Html.DisplayNameFor(model => model.FlmStatusName)
+                    </th>
+                    <th scope="col">
+                        @Html.DisplayNameFor(model => model.FlmMat)
+                    </th>
+                    <th scope="col">
+                        @Html.DisplayNameFor(model => model.FlmSha256)
+                        <a title="什麼是檢查碼？" href="https://chakra-zh.blogspot.com/2016/03/md5-sha-checksum.html" target="_blank">
+                            <i class="fa fa-question-circle" aria-hidden="true"></i>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (item.FlmStatus == 3 || item.FlmStatus == 4)
+                            {
+                                <a asp-action="Download" asp-route-id="@item.FlmSn" target="_blank">
+                                    @Html.DisplayFor(modelItem => item.FlmFileName)
+                                </a>
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(modelItem => item.FlmFileName)
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FlmStatusName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FlmMat)
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrWhiteSpace(item.FlmSha256))
+                            {
+                                <div class="input-group">
+                                    <input class="form-control" id="checksum_@(item.FlmSn)" value="@Html.DisplayFor(modelItem => item.FlmSha256)" />
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-info" title="複製" v-on:click="copyChecksum('@item.FlmSn')" >
+                                            <span class="fa fa-files-o" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let vmFlimIndex = new Vue({
+            el: "#elFlimIndex",
+            data: {
+                copyMsg: "@Html.DisplayNameFor(model => model.FlmSha256)"
+            },
+            methods: {
+                copyChecksum: function (flmSn) {
+                    $("#checksum_" + flmSn).select();
+                    document.execCommand("copy");
+                    swal("訊息", "已複製" + this.copyMsg + "至剪貼簿", "info");
+                }
+            }
+        });
+    </script>
+}

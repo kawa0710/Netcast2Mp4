@@ -1,0 +1,91 @@
+﻿@model Web.ViewModels.UserLoginViewModel
+
+@{
+    ViewData["Title"] = "登入";
+}
+<div class="row justify-content-md-center" id="elLogin">
+    <div class="col-md-4">
+        <div class="card">
+            <article class="card-body">
+                <a href="@Url.Action("Reg")" class="float-right btn btn-outline-primary">註冊</a>
+                <h4 class="card-title mb-4 mt-1">登入</h4>
+                <p>
+                    <a href="" class="btn btn-block btn-outline-info"><i class="fa fa-google"></i>登入</a>
+                    <a href="" class="btn btn-block btn-outline-warning"><i class="fa fa-instagram"></i>登入</a>
+                    <a href="" class="btn btn-block btn-outline-primary"><i class="fa fa-facebook"></i>登入</a>
+                </p>
+                <hr>
+                <form asp-action="Index">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-user"></i></span>
+                            </div>
+                            <input asp-for="UsrEmail" type="email" class="form-control" title="請輸入電子郵件" placeholder="請輸入電子郵件">
+                        </div>
+                        <span asp-validation-for="UsrEmail" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-key"></i></span>
+                            </div>
+                            <input asp-for="Password" type="password" class="form-control" title="請輸入密碼" placeholder="請輸入密碼">
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                            </div>
+                            <input asp-for="VCode" class="form-control" title="請輸入驗證碼" placeholder="請輸入驗證碼">
+                            <div class="input-group-append">
+                                <img title="圖型驗證碼" alt="圖型驗證碼" v-bind:src="validatecodeUrl" />
+                                <button type="button" class="btn btn-light" title="更換圖形驗證碼" v-on:click="resetValidatecode()">
+                                    <span class="fa fa-refresh" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
+                        <span asp-validation-for="VCode" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-block">登入</button>
+                    </div>
+                    @*<p class="text-center"><a href="#" class="btn">忘記密碼?</a></p>*@
+                </form>
+            </article>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script>
+
+    let vmLogin = new Vue({
+        el: "#elLogin",
+        data: {
+            validatecodeUrl: "@Url.Content("~/Login/GetValidateCode")",
+            isLogin: "@(Model == null ? "" : Model.IsLogin.ToString().ToLower())",
+            msg: "@(Model == null ? "" : Model.Msg ?? "")",
+        },
+        methods: {
+            resetValidatecode: function () {
+                this.validatecodeUrl = "@Url.Content("~/Login/GetValidateCode")?time=" + (new Date()).getTime();
+            }
+        },
+        mounted: function () {
+            this.$nextTick(function () {
+                // Code that will run only after the entire view has been rendered
+                if (this.msg.length > 0) {
+                    if (this.isLogin === "false") {
+                        swal("登入失敗", this.msg, "error");
+                    }
+                }
+            });
+        }
+    });
+</script>
+}

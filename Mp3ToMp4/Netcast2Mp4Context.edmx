@@ -1,0 +1,215 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Netcast2Mp4Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Flim">
+          <Key>
+            <PropertyRef Name="FLM_SN" />
+          </Key>
+          <Property Name="FLM_SN" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NTC_SN" Type="int" Nullable="false" />
+          <Property Name="FLM_FileName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="FLM_Status" Type="tinyint" Nullable="false" />
+          <Property Name="FLM_CAt" Type="datetime" Nullable="false" />
+          <Property Name="FLM_MAt" Type="datetime" Nullable="false" />
+          <Property Name="FLM_IsActive" Type="bit" Nullable="false" />
+          <Property Name="FLM_Sha256" Type="char" MaxLength="64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Image">
+          <Key>
+            <PropertyRef Name="IMG_SN" />
+          </Key>
+          <Property Name="IMG_SN" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NTC_SN" Type="int" Nullable="false" />
+          <Property Name="IMG_Guid16" Type="char" MaxLength="16" Nullable="false" />
+          <Property Name="IMG_Ext" Type="varchar" MaxLength="4" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Netcast">
+          <Key>
+            <PropertyRef Name="NTC_SN" />
+          </Key>
+          <Property Name="NTC_SN" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CHN_SN" Type="int" Nullable="false" />
+          <Property Name="NTC_Info" Type="ntext" Nullable="false" />
+          <Property Name="NTC_Guid" Type="varchar" MaxLength="200" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Flim_Netcast">
+          <End Role="Netcast" Type="Self.Netcast" Multiplicity="1" />
+          <End Role="Flim" Type="Self.Flim" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Netcast">
+              <PropertyRef Name="NTC_SN" />
+            </Principal>
+            <Dependent Role="Flim">
+              <PropertyRef Name="NTC_SN" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Image_Netcast">
+          <End Role="Netcast" Type="Self.Netcast" Multiplicity="1" />
+          <End Role="Image" Type="Self.Image" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Netcast">
+              <PropertyRef Name="NTC_SN" />
+            </Principal>
+            <Dependent Role="Image">
+              <PropertyRef Name="NTC_SN" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Netcast2Mp4ModelStoreContainer">
+          <EntitySet Name="Flim" EntityType="Self.Flim" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Image" EntityType="Self.Image" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Netcast" EntityType="Self.Netcast" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Flim_Netcast" Association="Self.FK_Flim_Netcast">
+            <End Role="Netcast" EntitySet="Netcast" />
+            <End Role="Flim" EntitySet="Flim" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Image_Netcast" Association="Self.FK_Image_Netcast">
+            <End Role="Netcast" EntitySet="Netcast" />
+            <End Role="Image" EntitySet="Image" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Netcast2Mp4Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="Netcast2Mp4Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Flims" EntityType="Netcast2Mp4Model.Flim" />
+          <EntitySet Name="Images" EntityType="Netcast2Mp4Model.Image" />
+          <EntitySet Name="Netcasts" EntityType="Netcast2Mp4Model.Netcast" />
+          <AssociationSet Name="FK_Flim_Netcast" Association="Netcast2Mp4Model.FK_Flim_Netcast">
+            <End Role="Netcast" EntitySet="Netcasts" />
+            <End Role="Flim" EntitySet="Flims" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Image_Netcast" Association="Netcast2Mp4Model.FK_Image_Netcast">
+            <End Role="Netcast" EntitySet="Netcasts" />
+            <End Role="Image" EntitySet="Images" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Flim">
+          <Key>
+            <PropertyRef Name="FLM_SN" />
+          </Key>
+          <Property Name="FLM_SN" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NTC_SN" Type="Int32" Nullable="false" />
+          <Property Name="FLM_FileName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="FLM_Status" Type="Byte" Nullable="false" />
+          <Property Name="FLM_CAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="FLM_MAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="FLM_IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="FLM_Sha256" Type="String" Nullable="false" MaxLength="64" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="Netcast" Relationship="Netcast2Mp4Model.FK_Flim_Netcast" FromRole="Flim" ToRole="Netcast" />
+        </EntityType>
+        <EntityType Name="Image">
+          <Key>
+            <PropertyRef Name="IMG_SN" />
+          </Key>
+          <Property Name="IMG_SN" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NTC_SN" Type="Int32" Nullable="false" />
+          <Property Name="IMG_Guid16" Type="String" Nullable="false" MaxLength="16" FixedLength="true" Unicode="false" />
+          <Property Name="IMG_Ext" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Netcast" Relationship="Netcast2Mp4Model.FK_Image_Netcast" FromRole="Image" ToRole="Netcast" />
+        </EntityType>
+        <EntityType Name="Netcast">
+          <Key>
+            <PropertyRef Name="NTC_SN" />
+          </Key>
+          <Property Name="NTC_SN" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CHN_SN" Type="Int32" Nullable="false" />
+          <Property Name="NTC_Info" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NTC_Guid" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Flims" Relationship="Netcast2Mp4Model.FK_Flim_Netcast" FromRole="Netcast" ToRole="Flim" />
+          <NavigationProperty Name="Images" Relationship="Netcast2Mp4Model.FK_Image_Netcast" FromRole="Netcast" ToRole="Image" />
+        </EntityType>
+        <Association Name="FK_Flim_Netcast">
+          <End Type="Netcast2Mp4Model.Netcast" Role="Netcast" Multiplicity="1" />
+          <End Type="Netcast2Mp4Model.Flim" Role="Flim" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Netcast">
+              <PropertyRef Name="NTC_SN" />
+            </Principal>
+            <Dependent Role="Flim">
+              <PropertyRef Name="NTC_SN" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Image_Netcast">
+          <End Type="Netcast2Mp4Model.Netcast" Role="Netcast" Multiplicity="1" />
+          <End Type="Netcast2Mp4Model.Image" Role="Image" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Netcast">
+              <PropertyRef Name="NTC_SN" />
+            </Principal>
+            <Dependent Role="Image">
+              <PropertyRef Name="NTC_SN" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Netcast2Mp4ModelStoreContainer" CdmEntityContainer="Netcast2Mp4Entities">
+          <EntitySetMapping Name="Flims">
+            <EntityTypeMapping TypeName="Netcast2Mp4Model.Flim">
+              <MappingFragment StoreEntitySet="Flim">
+                <ScalarProperty Name="FLM_Sha256" ColumnName="FLM_Sha256" />
+                <ScalarProperty Name="FLM_IsActive" ColumnName="FLM_IsActive" />
+                <ScalarProperty Name="FLM_MAt" ColumnName="FLM_MAt" />
+                <ScalarProperty Name="FLM_CAt" ColumnName="FLM_CAt" />
+                <ScalarProperty Name="FLM_Status" ColumnName="FLM_Status" />
+                <ScalarProperty Name="FLM_FileName" ColumnName="FLM_FileName" />
+                <ScalarProperty Name="NTC_SN" ColumnName="NTC_SN" />
+                <ScalarProperty Name="FLM_SN" ColumnName="FLM_SN" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Images">
+            <EntityTypeMapping TypeName="Netcast2Mp4Model.Image">
+              <MappingFragment StoreEntitySet="Image">
+                <ScalarProperty Name="IMG_Ext" ColumnName="IMG_Ext" />
+                <ScalarProperty Name="IMG_Guid16" ColumnName="IMG_Guid16" />
+                <ScalarProperty Name="NTC_SN" ColumnName="NTC_SN" />
+                <ScalarProperty Name="IMG_SN" ColumnName="IMG_SN" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Netcasts">
+            <EntityTypeMapping TypeName="Netcast2Mp4Model.Netcast">
+              <MappingFragment StoreEntitySet="Netcast">
+                <ScalarProperty Name="NTC_Guid" ColumnName="NTC_Guid" />
+                <ScalarProperty Name="NTC_Info" ColumnName="NTC_Info" />
+                <ScalarProperty Name="CHN_SN" ColumnName="CHN_SN" />
+                <ScalarProperty Name="NTC_SN" ColumnName="NTC_SN" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="無" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

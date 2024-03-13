@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="b7526a685b4c4043ac3e2974c4d2ee37" Name="Diagram1">
+        <EntityTypeShape EntityType="Netcast2Mp4Model.Flim" Width="1.5" PointX="3" PointY="3.75" />
+        <EntityTypeShape EntityType="Netcast2Mp4Model.Image" Width="1.5" PointX="3" PointY="1.125" />
+        <EntityTypeShape EntityType="Netcast2Mp4Model.Netcast" Width="1.5" PointX="0.75" PointY="2.75" />
+        <AssociationConnector Association="Netcast2Mp4Model.FK_Flim_Netcast" />
+        <AssociationConnector Association="Netcast2Mp4Model.FK_Image_Netcast" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,77 @@
+﻿@model Web.ViewModels.UserChangePwdViewModel
+
+@{
+    ViewData["Title"] = "變更密碼";
+
+    if (Model != null && Model.IsSuccess)
+    {
+        ViewData["Title"] = "變更密碼成功";
+    }
+}
+
+<h1>變更密碼</h1>
+
+<hr />
+<div class="row" id="elChangePwd">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="UsrSn" />
+            <div class="form-group">
+                <label asp-for="UpwPwd" class="control-label"></label>
+                <input asp-for="UpwPwd" class="form-control" />
+                <span asp-validation-for="UpwPwd" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConfirmPassword" class="control-label"></label>
+                <input asp-for="ConfirmPassword" class="form-control" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="儲存" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script>
+
+    let vmChangePwd = new Vue({
+        el: "#elChangePwd",
+        data: {
+            isSuccess: "@(Model == null ? "" : Model.IsSuccess.ToString().ToLower())",
+            isLogin: "@(Model == null ? "" : Model.IsLogin.ToString().ToLower())",
+            msg: "@(Model == null ? "" : Model.Msg ?? "")",
+        },
+        methods: {
+        },
+        mounted: function () {
+            this.$nextTick(function () {
+                // Code that will run only after the entire view has been rendered
+                if (this.msg.length > 0) {
+                    if (this.isSuccess === "false") {
+                        swal("變更密碼失敗", this.msg, "error");
+                    }
+                    if (this.isSuccess === "true") {
+                        if (this.isLogin === "true")
+                            swal("變更密碼成功！", this.msg, "success");
+                        else {
+                            swal({
+                                title: "變更密碼成功！",
+                                text: this.msg,
+                                icon: "success",
+                                dangerMode: true,
+                                button: "確定",
+                                }).then(function () {
+                                window.location = "/Login/Index";
+                            });
+                        }
+                    }
+                }
+            })
+        }
+    });
+</script>
+}

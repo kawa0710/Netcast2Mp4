@@ -1,0 +1,60 @@
+﻿@model Web.Models.User
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>User</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UsrEmail)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.UsrEmail)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UsrGuid)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.UsrGuid)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UsrCat)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.UsrCat)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UsrCuser)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.UsrCuser)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UsrMat)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.UsrMat)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UsrMuser)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.UsrMuser)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UsrIsActive)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.UsrIsActive)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.UsrSn">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -1,0 +1,362 @@
+﻿@{
+    ViewData["Title"] = "轉檔選擇作業";
+}
+<form id="formConverterIndex">
+    @Html.AntiForgeryToken()
+    <div class="row justify-content-md-center" id="elConverterIndex">
+        <div class="col-md-12">
+            <button type="button" id="BackTop" class="toTop-arrow"></button>
+            <div class="text-center">
+                <h1 class="display-4">選擇音訊及圖檔</h1>
+                <a class="btn btn-success" data-toggle="collapse" href="#loadOldData" role="button" aria-expanded="false" aria-controls="loadOldData" v-if="isShowLoadOldDataBtn" v-on:click="loadOldData">轉檔</a>
+                <a class="btn btn-success" v-if="!isShowLoadOldDataBtn" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    載入中...
+                </a>
+                <a class="btn btn-info" data-toggle="collapse" href="#readNewData" role="button" aria-expanded="false" aria-controls="readNewData">讀取新資料</a>
+            </div>
+            <div class="collapse" id="loadOldData">
+                <!--擇選、轉檔-->
+                <div class="card card-body" v-if="netcastLoadList.length > 0">
+                    <div class="row">
+                        <div class="col-md-10 offset-md-1 input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text bg-warning">
+                                    圖片
+                                </div>
+                            </div>
+                            <div class="custom-file">
+                                <input type="file" accept="gif,jpg,jpeg,png,apng" ref="pic" class="custom-file-input" id="uploadPic" v-on:change="uploadPicOnChange($event)" />
+                                <label class="custom-file-label text-muted" for="uploadPic">{{imgHint}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div id="picPreview" class="col-md-10 text-center">
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-10 text-center">
+                            <button type="button" class="btn btn-warning" v-bind:disabled="selected.length === 0" v-on:click="convert" v-if="isShowConvertBtn">轉檔</button>
+                            <button type="button" class="btn btn-warning" v-if="!isShowConvertBtn" disabled>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                傳輸中...
+                            </button>
+                        </div>
+                    </div>
+                    <div class="accordion" id="accordionList0">
+                        <div class="card" v-for="n in netcastLoadList">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <input type="checkbox" class="form-check position-static" v-model="selected" v-bind:value="n.ntcSn" />
+                                    </div>
+                                </div>
+                                <button class="btn btn-link" type="button" data-toggle="collapse" v-bind:data-target="'#collapse'+n.ntcSn" aria-expanded="true" aria-controls="collapseOne">
+                                    {{n.title}}
+                                </button>
+                            </div>
+                            <div v-bind:id="'collapse'+n.ntcSn" class="collapse" aria-labelledby="headingOne" data-parent="#accordionList0">
+                                <div class="card-body">
+                                    <pre>{{n.summary}}</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-10 text-center">
+                            <button type="button" class="btn btn-warning" v-bind:disabled="selected.length === 0" v-on:click="convert" v-if="isShowConvertBtn">轉檔</button>
+                            <button type="button" class="btn btn-warning" v-if="!isShowConvertBtn" disabled>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                傳輸中...
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="collapse" id="readNewData">
+                <!--讀取新資料-->
+                <div class="card text-center card-body">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="rssUrl">RSS</label>
+                        </div>
+                        <input id="rssUrl" ref="rssUrl" type="url" class="form-control" v-model="rssUrl"
+                               pattern="http[s]?://.*(\.[rR][sS][sS]|\.[xX][mM][lL])$" placeholder="請輸入RSS網址" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary" v-if="isShowReadNewDataBtn" v-on:click="readRssUrl" v-bind:disabled="validRssUrl">讀取</button>
+                        <button type="button" class="btn btn-primary" v-if="!isShowReadNewDataBtn" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            載入中...
+                        </button>
+                    </div>
+                </div>
+                <div class="card card-body" v-if="netcastReadList.length > 0">
+                    <div class="row justify-content-center">
+                        <div class="col-md-10 text-center">
+                            已增音輯資訊
+                        </div>
+                    </div>
+                    <div class="accordion" id="accordionList1">
+                        <div class="card" v-for="n in netcastReadList">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" v-bind:data-target="'#collapse'+n.ntcSn" aria-expanded="true" aria-controls="collapseOne">
+                                {{n.title}}
+                            </button>
+                            <div v-bind:id="'collapse'+n.ntcSn" class="collapse" aria-labelledby="headingOne" data-parent="#accordionList1">
+                                <div class="card-body">
+                                    <pre>{{n.summary}}</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        let vmConverterIndex = new Vue({
+            el: "#elConverterIndex",
+            data: {
+                isShowLoadOldDataBtn: true,
+                isShowReadNewDataBtn: true,
+                isShowConvertBtn: true,
+                readUrl: "@Url.Content("~/Converter/GetRssInfo")",
+                loadUrl: "@Url.Content("~/Converter/LoadData")",
+                imageUrl: "@Url.Content("~/Converter/GetImages")",
+                convertUrl: "@Url.Content("~/Converter/SendData")",
+                rssUrl: null,
+                netcastLoadList: [],
+                netcastReadList: [],
+                selected: [],
+                imgHint: "請選擇圖片（限gif/jpg/jpeg/png/apng、大小1MB、長寬1920*1080，動態png請存為apng）",
+                imgSizeLimit: 1 * (1024 * 1024), // 1MB
+                imgWidthLimit: 1920,
+                imgHeightLimit: 1080
+            },
+            methods: {
+                isAllowImgSize: function () {
+                    let that = this;
+                    if (that.$refs.pic.files.length > 0)
+                        return (that.$refs.pic.files[0].size <= that.imgSizeLimit);
+                    else
+                        return false;
+                },
+                isAllowImgWidth: function () {
+                    let that = this;
+                    if (that.$refs.pic.files.length > 0)
+                        return ($("#picPreview > .obj").get(0).width <= that.imgWidthLimit);
+                    else
+                        return false;
+                },
+                isAllowImgHeight: function () {
+                    let that = this;
+                    if (that.$refs.pic.files.length > 0)
+                        return ($("#picPreview > .obj").get(0).height <= that.imgHeightLimit);
+                    else
+                        return false;
+                },
+                convert: function () {
+                    let that = this;
+                    if (that.$refs.pic.files.length === 0) {
+                        swal({
+                            title: "請確認",
+                            text: "不上傳圖檔嗎？",
+                            icon: "warning",
+                            buttons: true,
+                            dangerMode: true,
+                            buttons: ["取消", "是！"],
+                        }).then(function (yes) {
+                            if (yes) {
+                                that.convert2();
+                            }
+                        });
+                    }
+                    else
+                        that.convert2();
+                },
+                convert2: function () {
+                    debugger
+                    let that = this;
+                    that.isShowConvertBtn = !that.isShowConvertBtn;
+                    let formData = new FormData();
+                    if (that.$refs.pic.files.length === 0)
+                        formData.append("pic", null);
+                    else
+                        formData.append("pic", that.$refs.pic.files[0]);
+
+                    if (that.selected.length === 0)
+                        formData.append("ntcsn_jsonlist", null);
+                    else
+                        formData.append("ntcsn_jsonlist", JSON.stringify(that.selected));
+                    axios.post(that.convertUrl,
+                        formData,
+                        {
+                            headers: $.extend({}, that.getToken(), { "Content-Type": "multipart/form-data" })
+                        })
+                        .then(function (response) {
+                            debugger
+                            //轉到下載狀態頁
+                        })
+                        .catch(function (error) {
+                            swal("讀取失敗", "發生錯誤：" + error + "！請聯絡客服。", "error");
+                            console.log(error);
+                        })
+                        .finally(function () {
+                            that.isShowConvertBtn = !that.isShowConvertBtn;
+                        });
+                },
+                getImage: function () {
+                    let that = this;
+                    axios.post(that.imageUrl,
+                        {},
+                        {
+                            headers: that.getToken()
+                        })
+                        .then(function (response) {
+                            let err_code = ["0", "-1"];
+                            if (response.data && !isError(err_code, response.data)) {
+                                //本版本只能上傳1張圖故只取第1張圖
+                                $("#uploadPic").siblings(".custom-file-label").addClass("selected").html(response.data[0].name);
+                                let preview = document.getElementById("picPreview");
+                                const img = document.createElement("img");
+                                img.src = response.data[0].base64;
+                                preview.appendChild(img);
+                            }
+                        });
+                },
+                getToken: function () {
+                    let __RequestVerificationToken = $("#formConverterIndex > input[name='__RequestVerificationToken']").val();
+                    return {
+                        "Content-Type": "application/json",
+                        "RequestVerificationToken": __RequestVerificationToken
+                    };
+                },
+                isOKRssUrl: function () {
+                    if (this.rssUrl)
+                        return (this.$refs["rssUrl"].validity.valid);
+                    else
+                        return false;
+                },
+                loadOldData: function () {
+                    $("#loadOldData").collapse("show");
+                    let that = this;
+                    that.isShowLoadOldDataBtn = !that.isShowLoadOldDataBtn;
+                    that.netcastLoadList = [];
+                    that.netcastReadList = [];
+                    axios.post(that.loadUrl,
+                        {},
+                        {
+                            headers: that.getToken()
+                        })
+                        .then(function (response) {
+                            let err_code = ["0", "-1"];
+                            if (response.data && !isError(err_code, response.data)) {
+                                that.netcastLoadList = response.data;
+                            }
+                            else {
+                                if (response.data === "0") {
+                                    swal("提示", "您沒有任何音輯資訊。", "info");
+                                }
+                                else
+                                    swal("讀取失敗", "發生錯誤：" + response.data + "！請聯絡客服。", "error");
+                            }
+                        })
+                        .catch(function (error) {
+                            swal("讀取失敗", "發生錯誤：" + error + "！請聯絡客服。", "error");
+                            console.log(error);
+                        })
+                        .finally(function () {
+                            that.getImage();
+                            that.isShowLoadOldDataBtn = !that.isShowLoadOldDataBtn;
+                        });
+                },
+                readRssUrl: function () {
+                    let that = this;
+                    that.isShowReadNewDataBtn = !that.isShowReadNewDataBtn;
+                    that.netcastLoadList = [];
+                    that.netcastReadList = [];
+                    if (that.isOKRssUrl()) {
+                        axios.post(that.readUrl,
+                            { url: encodeURIComponent(this.rssUrl) },
+                            {
+                                headers: that.getToken()
+                            })
+                            .then(function (response) {
+                                let err_code = ["0", "-1", "-2", "-3"];
+                                if (response.data && !isError(err_code, response.data)) {
+                                    if (response.data.length > 0)
+                                        that.netcastReadList = response.data;
+                                    else
+                                        swal("提示", "您的RSS沒有新的音輯資訊。", "info");
+                                }
+                                else {
+                                    if (response.data === "0") {
+                                        swal("提示", "您的RSS沒有任何音輯資訊。", "info");
+                                    }
+                                    else if (response.data === "-3") {
+                                        swal("提示", "您有音輯正在轉檔中無法重讀RSS", "info");
+                                    }
+                                    else
+                                        swal("讀取RSS失敗", "發生錯誤：" + response.data + "！請聯絡客服。", "error");
+                                }
+                            })
+                            .catch(function (error) {
+                                swal("讀取失敗", "發生錯誤：" + error + "！請聯絡客服。", "error");
+                                console.log(error);
+                            })
+                            .finally(function () {
+                                that.isShowReadNewDataBtn = !that.isShowReadNewDataBtn;
+                            });
+                    }
+                    else
+                        swal("讀取RSS失敗", "RSS網址格式錯誤", "error");
+                },
+                uploadPicOnChange: function (event) {
+                    @*file放在v-if，所以render不到在my.js裡的事件*@
+                    $("#picPreview").html("");
+                    let that = this;
+                    if (that.$refs.pic.files.length > 0 && that.isAllowImgSize()) {
+                        $(event.target).siblings(".custom-file-label").addClass("selected").html(this.$refs.pic.files[0].name);
+                        previewImgs(this.$refs.pic.files, "picPreview");
+                        if (!(that.isAllowImgWidth() && that.isAllowImgHeight())) {
+                            swal("圖檔超過限制", "圖檔長寬限" + that.imgWidthLimit + "*" + that.imgHeightLimit + "。", "error");
+                        }
+                    }
+                    else {
+                        swal("圖檔超過限制", "圖檔大小限" + (that.imgSizeLimit / 1024 / 1024) + "MB。", "error");
+                    }
+                },
+            },
+            computed: {
+                validRssUrl: function () {
+                    return !this.isOKRssUrl();
+                }
+            },
+            mounted: function () {
+                this.$nextTick(function () {
+
+                $("#loadOldData").on("show.bs.collapse", function () {
+                    $("#readNewData").collapse("hide");
+                });
+                $("#readNewData").on("show.bs.collapse", function () {
+                    $("#loadOldData").collapse("hide");
+                });
+                $('#BackTop').click(function(){
+		            $('html,body').animate({scrollTop:0}, 333);
+	            });
+	            $(window).scroll(function() {
+		            if ( $(this).scrollTop() > 300 ){
+			            $('#BackTop').fadeIn(222);
+		            } else {
+			            $('#BackTop').stop().fadeOut(222);
+		            }
+	            }).scroll();
+            });
+        }
+    });
+    </script>
+}

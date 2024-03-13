@@ -1,0 +1,74 @@
+﻿@model Web.ViewModels.UserRegViewModel
+
+@{
+    ViewData["Title"] = "註冊";
+
+    if (Model != null && Model.IsReg)
+    {
+        ViewData["Title"] = "註冊成功";
+    }
+}
+
+<h4>@ViewData["Title"]</h4>
+<hr />
+<div class="row" id="elReg">
+    <div class="col-md-4">
+        <form asp-action="Reg">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="UsrEmail" class="control-label"></label>
+                <input asp-for="UsrEmail" type="email" class="form-control" title="請輸入電子郵件" placeholder="請輸入電子郵件" />
+                <span asp-validation-for="UsrEmail" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="VCode" class="control-label"></label>
+                <div class="input-group">
+                    <input asp-for="VCode" class="form-control" title="請輸入驗證碼" placeholder="請輸入驗證碼" />
+                    <div class="input-group-append">
+                        <img title="圖型驗證碼" alt="圖型驗證碼" v-bind:src="validatecodeUrl" />
+                        <button type="button" class="btn btn-light" title="更換圖形驗證碼" v-on:click="resetValidatecode()">
+                            <span class="fa fa-refresh" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+                <span asp-validation-for="VCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="送出" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script>
+
+    let vmReg = new Vue({
+        el: "#elReg",
+        data: {
+            validatecodeUrl: "@Url.Content("~/Login/GetValidateCode")",
+            isReg: "@(Model == null ? "" : Model.IsReg.ToString().ToLower())",
+            msg: "@(Model == null ? "" : Model.Msg ?? "")",
+        },
+        methods: {
+            resetValidatecode: function () {
+                this.validatecodeUrl = "@Url.Content("~/Login/GetValidateCode")?time=" + (new Date()).getTime();
+            }
+        },
+        mounted: function () {
+            this.$nextTick(function () {
+                // Code that will run only after the entire view has been rendered
+                if (this.msg.length > 0) {
+                    if (this.isReg === "false") {
+                        swal("註冊失敗", this.msg, "error");
+                    }
+                    if (this.isReg === "true") {
+                        swal("註冊成功！", this.msg, "success");
+                    }
+                }
+            })
+        }
+    });
+</script>
+}
